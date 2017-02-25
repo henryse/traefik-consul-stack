@@ -25,6 +25,24 @@
 #**********************************************************************
 
 #!/usr/bin/env bash
-export DOCKER_IP=$(/sbin/ip -4 -o addr show dev eth0| awk '{split($4,a,"/");print a[1]}')
+# Find the IP Address of the VM running docker.
+#
+export DOCKER_IP="0.0.0.0"
+
+if hash docker-machine 2>/dev/null; then
+    eval $(docker-machine env default)
+    DOCKER_IP=$(docker-machine ip default)
+else
+    if [ "$(uname)" == "Darwin" ]; then
+       DOCKER_IP=$(ifconfig en0 | awk '$1 == "inet" {print $2}')
+    elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
+       DOCKER_IP=$(ifconfig eth0 | grep 'inet addr:' | cut -d: -f2 | awk '{ print $1}')
+    fi
+fi
+
+# We need to get the password:
+#
+export PASSWORD_JSON=$(cat password.json);
 
 docker-compose stop
+docker-compose rm -f

@@ -28,6 +28,7 @@ version: "2"
 services:
   consul:
     image: consul:v0.7.0
+    restart: always
     ports:
       - "8500:8500"
     command: agent -server -bootstrap -client 0.0.0.0 -advertise $DOCKER_IP -ui -data-dir=/tmp/consul
@@ -35,6 +36,7 @@ services:
 
   traefik:
     image: traefik:v1.0.3
+    restart: always
     ports:
       - "8080:8080"
       - "8081:8081"
@@ -48,6 +50,7 @@ services:
 
   registrator:
     image: gliderlabs/registrator:v7
+    restart: always
     volumes:
       - "/var/run/docker.sock:/tmp/docker.sock"
     command: -ip $DOCKER_IP consul://$DOCKER_IP:8500
@@ -56,3 +59,19 @@ services:
       driver: none
     depends_on:
       - consul
+
+  traefik-consul-stack-docker-ui:
+    image: portainer/portainer
+    restart: always
+    volumes:
+      - '/var/run/docker.sock:/var/run/docker.sock'
+    expose:
+      - 9000
+    ports:
+      - 9000:9000
+
+  password:
+    image: appropriate/curl:latest
+    command: -X POST -d '${PASSWORD_JSON}' http://${DOCKER_IP}:9000/api/users/admin/init
+    depends_on:
+      - traefik-consul-stack-docker-ui

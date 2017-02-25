@@ -47,6 +47,10 @@ else
     fi
 fi
 
+# We need to get the password:
+#
+export PASSWORD_JSON=$(cat password.json);
+
 # Fire it up!
 #
 docker-compose up -d
@@ -58,3 +62,4 @@ echo -e ""
 echo -e "Consul:           ${dark_green}${DOCKER_IP}${nocolor}:${green}8500${nocolor}"
 echo -e "Traefik HTTP In:  ${dark_green}${DOCKER_IP}${nocolor}:${green}8080${nocolor}"
 echo -e "Traefik Admin UI: ${dark_green}${DOCKER_IP}${nocolor}:${green}8081${nocolor}"
+echo -e "Docker UI:        ${dark_green}${DOCKER_IP}${nocolor}:${green}9000${nocolor}"
