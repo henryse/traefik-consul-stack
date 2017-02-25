@@ -1,0 +1,34 @@
+# Traefik logs file
+# If not defined, logs to stdout
+#
+# Optional
+#
+# traefikLogsFile = "/var/log/traefik/traefik.log"
+
+# Access logs file
+#
+# Optional
+#
+# accessLogsFile = "/var/log/traefik/access.log"
+
+# Log level
+#
+# Optional
+# Default: "ERROR"
+# Accepted values, in order of severity: "DEBUG", "INFO", "WARN", "ERROR", "FATAL", "PANIC"
+# Messages at and above the selected level will be logged.
+#
+logLevel = "INFO"
+
+defaultEntryPoints = ["http"]
+
+[entryPoints]
+    [entryPoints.http]
+    address = ":8080"
+
+[consulCatalog]
+endpoint = "consul:8500"
+domain = "applegate.farm"
+
+[web]
+address = "0.0.0.0:8081"
