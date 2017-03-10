@@ -48,7 +48,7 @@ else
     fi
 fi
 
-if ["${DOCKER_IP}" == ""]; then
+if [ "${DOCKER_IP}" == "" ]; then
     export DOCKER_IP="127.0.0.1"
 fi
 
