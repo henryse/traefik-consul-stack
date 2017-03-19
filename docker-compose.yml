@@ -40,6 +40,7 @@ services:
       - "SERVICE_NAME=consul"
       - "SERVICE_8500_CHECK_HTTP=/"
       - "METRICS_ENABLED=false"
+      - "SERVICE_TAGS=traefik.enable=true"
 
   traefik:
     image: traefik:v1.0.3
@@ -84,6 +85,7 @@ services:
       - "SERVICE_NAME=portainer"
       - "SERVICE_9000_CHECK_HTTP=/"
       - "METRICS_ENABLED=false"
+      - "SERVICE_TAGS=traefik.enable=true"
     depends_on:
       - registrator
 
