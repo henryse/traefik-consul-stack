@@ -46,7 +46,7 @@
 #
 #**********************************************************************
 
-logLevel = "INFO"
+logLevel = "DEBUG"
 
 defaultEntryPoints = ["http"]
 
@@ -55,8 +55,8 @@ defaultEntryPoints = ["http"]
     address = ":8080"
 
 [consulCatalog]
-endpoint = "127.0.0.1:8500"
-domain = "applegate.farm"
+endpoint = "192.168.0.25:8500"
+domain = "router.applegate.farm"
 
 [web]
 address = "0.0.0.0:8081"

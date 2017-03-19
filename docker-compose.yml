@@ -28,19 +28,30 @@ version: "2"
 services:
   consul:
     image: consul:v0.7.0
-    restart: always
-    expose:
-      - 8500
-    ports:
-      - 8500:8500
-    command: agent -server -bootstrap -client 0.0.0.0 -advertise $DOCKER_IP -ui -data-dir=/tmp/consul
     environment:
       - "HOST=$DOCKER_IP"
-      - "LOGSTASH_ENABLED=false"
-      - "SERVICE_NAME=consul"
-      - "SERVICE_8500_CHECK_HTTP=/"
-      - "METRICS_ENABLED=false"
-      - "SERVICE_TAGS=traefik.enable=true"
+      - "SERVICE_8300_NAME=consul-server-rpc"
+      - "SERVICE_8301_NAME=consul-serf-lan"
+      - "SERVICE_8302_NAME=consul-serf-wan"
+      - "SERVICE_8400_NAME=consul-cli-prc"
+      - "SERVICE_8500_NAME=consul-ui"
+      - "SERVICE_8600_NAME=consul-dns"
+    restart: always
+    expose:
+      - 8300
+      - 8301
+      - 8302
+      - 8400
+      - 8500
+      - 8600
+    ports:
+      - 8300:8300
+      - 8301:8301
+      - 8302:8302
+      - 8400:8400
+      - 8500:8500
+      - 8600:8600
+    command: agent -server -bootstrap -client 0.0.0.0 -advertise $DOCKER_IP -ui -data-dir=/tmp/consul
 
   traefik:
     image: traefik:v1.0.3
@@ -72,6 +83,9 @@ services:
 
   traefik-consul-stack-docker-ui:
     image: portainer/portainer
+    environment:
+      - "HOST=$DOCKER_IP"
+      - "SERVICE_NAME=docker-ui"
     restart: always
     volumes:
       - '/var/run/docker.sock:/var/run/docker.sock'
@@ -79,13 +93,6 @@ services:
       - 9000
     ports:
       - 9000:9000
-    environment:
-      - "HOST=$DOCKER_IP"
-      - "LOGSTASH_ENABLED=false"
-      - "SERVICE_NAME=portainer"
-      - "SERVICE_9000_CHECK_HTTP=/"
-      - "METRICS_ENABLED=false"
-      - "SERVICE_TAGS=traefik.enable=true"
     depends_on:
       - registrator
 
