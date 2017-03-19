@@ -34,6 +34,12 @@ services:
     ports:
       - 8500:8500
     command: agent -server -bootstrap -client 0.0.0.0 -advertise $DOCKER_IP -ui -data-dir=/tmp/consul
+    environment:
+      - "HOST=$DOCKER_IP"
+      - "LOGSTASH_ENABLED=false"
+      - "SERVICE_NAME=consul"
+      - "SERVICE_8500_CHECK_HTTP=/"
+      - "METRICS_ENABLED=false"
 
   traefik:
     image: traefik:v1.0.3
@@ -72,9 +78,19 @@ services:
       - 9000
     ports:
       - 9000:9000
+    environment:
+      - "HOST=$DOCKER_IP"
+      - "LOGSTASH_ENABLED=false"
+      - "SERVICE_NAME=portainer"
+      - "SERVICE_9000_CHECK_HTTP=/"
+      - "METRICS_ENABLED=false"
+    depends_on:
+      - registrator
 
   password:
-    image: appropriate/curl:latest
+    image: henryse/docker-curl:latest
+    environment:
+        - "CURL_SLEEP=10"
     command: -X POST -d '${PASSWORD_JSON}' http://${DOCKER_IP}:9000/api/users/admin/init
     depends_on:
       - traefik-consul-stack-docker-ui
