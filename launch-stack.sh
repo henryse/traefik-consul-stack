@@ -52,6 +52,12 @@ if [ "${DOCKER_IP}" == "" ]; then
     export DOCKER_IP="127.0.0.1"
 fi
 
+#
+# Setup traefik.toml file with the correct IP Address
+#
+export CONSUL_IP=${DOCKER_IP}
+cat $(pwd)/traefik/traefik.toml.sed |  sed -e "s/CONSUL_IP/${CONSUL_IP}/g" > $(pwd)/traefik/traefik.toml
+
 # We need to get the password:
 #
 export PASSWORD_JSON=$(cat password.json);

@@ -60,3 +60,5 @@ echo -e "${white}Docker host is ${green}${DOCKER_IP}${nocolor}"
 
 docker-compose stop
 docker-compose rm -f
+
+rm $(pwd)/traefik/traefik.toml

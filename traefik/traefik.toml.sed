@@ -55,7 +55,7 @@ defaultEntryPoints = ["http"]
     address = ":8080"
 
 [consulCatalog]
-endpoint = "192.168.0.25:8500"
+endpoint = "CONSUL_IP:8500"
 domain = "router.applegate.farm"
 
 [web]
