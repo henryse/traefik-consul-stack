@@ -24,6 +24,30 @@
 #
 #**********************************************************************
 #
+# Duration to give active requests a chance to finish during hot-reloads.
+# Can be provided in a format supported by [time.ParseDuration](https://golang.org/pkg/time/#ParseDuration) or as raw
+# values (digits). If no units are provided, the value is parsed assuming
+# seconds.
+#
+# Optional
+# Default: "10s"
+#
+# graceTimeOut = "10s"
+#
+# Enable debug mode
+#
+# Optional
+# Default: false
+#
+# debug = true
+#
+# Periodically check if a new version has been released
+#
+# Optional
+# Default: true
+#
+# checkNewVersion = false
+#
 # Traefik logs file
 # If not defined, logs to stdout
 #
@@ -44,6 +68,44 @@
 # Accepted values, in order of severity: "DEBUG", "INFO", "WARN", "ERROR", "FATAL", "PANIC"
 # Messages at and above the selected level will be logged.
 #
+# Backends throttle duration: minimum duration in seconds between 2 events from providers
+# before applying a new configuration. It avoids unnecessary reloads if multiples events
+# are sent in a short amount of time.
+# Can be provided in a format supported by [time.ParseDuration](https://golang.org/pkg/time/#ParseDuration) or as raw
+# values (digits). If no units are provided, the value is parsed assuming
+# seconds.
+#
+# Optional
+# Default: "2s"
+#
+# ProvidersThrottleDuration = "2s"
+#
+# IdleTimeout: maximum amount of time an idle (keep-alive) connection will remain idle before closing itself.
+# This is set to enforce closing of stale client connections.
+# Can be provided in a format supported by [time.ParseDuration](https://golang.org/pkg/time/#ParseDuration) or as raw
+# values (digits). If no units are provided, the value is parsed assuming seconds.
+#
+# Optional
+# Default: "180s"
+#
+# IdleTimeout = "360s"
+#
+# Controls the maximum idle (keep-alive) connections to keep per-host. If zero, DefaultMaxIdleConnsPerHost
+# from the Go standard library net/http module is used.
+# If you encounter 'too many open files' errors, you can either increase this
+# value or change the `ulimit`.
+#
+# Optional
+# Default: 200
+#
+# MaxIdleConnsPerHost = 200
+#
+# If set to true invalid SSL certificates are accepted for backends.
+# Note: This disables detection of man-in-the-middle attacks so should only be used on secure backend networks.
+# Optional
+# Default: false
+#
+# InsecureSkipVerify = true
 #**********************************************************************
 
 logLevel = "DEBUG"
@@ -56,7 +118,7 @@ defaultEntryPoints = ["http"]
 
 [consulCatalog]
 endpoint = "CONSUL_IP:8500"
-domain = "router.applegate.farm"
+domain = "applegate.farm"
 
 [web]
 address = "0.0.0.0:8081"
