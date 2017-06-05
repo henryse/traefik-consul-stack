@@ -27,15 +27,10 @@
 version: "2"
 services:
   consul:
-    image: consul:v0.7.0
+    image: consul:0.8.3
     environment:
       - "HOST=$DOCKER_IP"
-      - "SERVICE_8300_NAME=consul-server-rpc"
-      - "SERVICE_8301_NAME=consul-serf-lan"
-      - "SERVICE_8302_NAME=consul-serf-wan"
-      - "SERVICE_8400_NAME=consul-cli-prc"
-      - "SERVICE_8500_NAME=consul-ui"
-      - "SERVICE_8600_NAME=consul-dns"
+      - "SERVICE_TAGS=traefik.enable=false"
     restart: always
     expose:
       - 8300
@@ -54,7 +49,9 @@ services:
     command: agent -server -bootstrap -client 0.0.0.0 -advertise $DOCKER_IP -ui -data-dir=/tmp/consul
 
   traefik:
-    image: traefik:v1.0.3
+    image: traefik:v1.3
+    environment:
+      - "HOST=$DOCKER_IP"
     restart: always
     expose:
       - 8080
@@ -62,10 +59,6 @@ services:
     ports:
       - 8080:8080
       - 8081:8081
-    environment:
-      - "HOST=$DOCKER_IP"
-      - "SERVICE_8080_NAME=traefik"
-      - "SERVICE_8081_NAME=traefik-ui"
     extra_hosts:
       - "consul:${DOCKER_IP}"
     volumes:
@@ -75,6 +68,9 @@ services:
 
   registrator:
     image: gliderlabs/registrator:v7
+    environment:
+      - "HOST=$DOCKER_IP"
+      - "SERVICE_TAGS=traefik.enable=false"
     restart: always
     volumes:
       - "/var/run/docker.sock:/tmp/docker.sock"
@@ -85,11 +81,11 @@ services:
     depends_on:
       - consul
 
-  traefik-consul-stack-docker-ui:
+  portainer:
     image: portainer/portainer
     environment:
       - "HOST=$DOCKER_IP"
-      - "SERVICE_NAME=docker-ui"
+      - "SERVICE_TAGS=traefik.enable=false"
     restart: always
     volumes:
       - '/var/run/docker.sock:/var/run/docker.sock'
@@ -97,9 +93,6 @@ services:
       - 9000
     ports:
       - 9000:9000
-    environment:
-      - "HOST=$DOCKER_IP"
-      - "SERVICE_9000_NAME=portainer"
     depends_on:
       - registrator
 
@@ -109,4 +102,4 @@ services:
         - "CURL_SLEEP=10"
     command: -X POST -d '${PASSWORD_JSON}' http://${DOCKER_IP}:9000/api/users/admin/init
     depends_on:
-      - traefik-consul-stack-docker-ui
+      - portainer

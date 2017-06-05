@@ -66,11 +66,13 @@ export PASSWORD_JSON=$(cat password.json);
 #
 docker-compose up -d
 
-# Check it out
+# Dump Handy IP Addresses
 #
+docker ps
+
 echo -e "${white}Docker host is ${green}${DOCKER_IP}${nocolor}"
 echo -e ""
 echo -e "Consul:           ${dark_green}${DOCKER_IP}${nocolor}:${green}8500${nocolor}"
 echo -e "Traefik HTTP In:  ${dark_green}${DOCKER_IP}${nocolor}:${green}8080${nocolor}"
 echo -e "Traefik Admin UI: ${dark_green}${DOCKER_IP}${nocolor}:${green}8081${nocolor}"
-echo -e "Docker UI:        ${dark_green}${DOCKER_IP}${nocolor}:${green}9000${nocolor}"
+echo -e "Portainer:        ${dark_green}${DOCKER_IP}${nocolor}:${green}9000${nocolor}"

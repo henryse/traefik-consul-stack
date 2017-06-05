@@ -62,3 +62,5 @@ docker-compose stop
 docker-compose rm -f
 
 rm $(pwd)/traefik/traefik.toml
+
+docker ps
