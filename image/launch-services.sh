@@ -64,13 +64,15 @@ export PASSWORD_JSON=$(cat password.json);
 
 # Fire it up!
 #
-docker-compose up -d
+pushd ../env/$1
+docker-compose up -d --remove-orphans
+popd
 
 # Dump Handy IP Addresses
 #
 docker ps
 
-echo -e "${white}Docker host is ${green}${DOCKER_IP}${nocolor}"
+echo -e "${white}Docker host is ${green}${DOCKER_IP}${nocolor} as ${1}"
 echo -e ""
 echo -e "Consul:           ${dark_green}${DOCKER_IP}${nocolor}:${green}8500${nocolor}"
 echo -e "Traefik HTTP In:  ${dark_green}${DOCKER_IP}${nocolor}:${green}8080${nocolor}"

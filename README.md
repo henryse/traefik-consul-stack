@@ -6,8 +6,12 @@ There is also a Raspberry PI version of this called henryse/pi-traefik-consul-st
 
 To launch the stack simply do the following:
 
-        bash ./launch-stack.sh
+        make desktop
+        
+        or
+        
+        make production
         
 To stop the stack you can use:
 
-        bash ./stop-service.sh
+        make stop

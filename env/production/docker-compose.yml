@@ -1,0 +1,105 @@
+#**********************************************************************
+#    Copyright (c) 2017 Henry Seurer
+#
+#    Permission is hereby granted, free of charge, to any person
+#    obtaining a copy of this software and associated documentation
+#    files (the "Software"), to deal in the Software without
+#    restriction, including without limitation the rights to use,
+#    copy, modify, merge, publish, distribute, sublicense, and/or sell
+#    copies of the Software, and to permit persons to whom the
+#    Software is furnished to do so, subject to the following
+#    conditions:
+#
+#    The above copyright notice and this permission notice shall be
+#    included in all copies or substantial portions of the Software.
+#
+#    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+#    EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+#    OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+#    NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+#    HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+#    WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+#    FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+#    OTHER DEALINGS IN THE SOFTWARE.
+#
+#**********************************************************************
+
+version: "2"
+services:
+  consul:
+    image: consul:0.8.3
+    environment:
+      - "HOST=$DOCKER_IP"
+      - "SERVICE_TAGS=traefik.enable=false"
+    restart: always
+    expose:
+      - 8300
+      - 8301
+      - 8302
+      - 8400
+      - 8500
+      - 8600
+    ports:
+      - 8300:8300
+      - 8301:8301
+      - 8302:8302
+      - 8400:8400
+      - 8500:8500
+      - 8600:8600
+    command: agent -server -bootstrap -client 0.0.0.0 -advertise $DOCKER_IP -ui -data-dir=/tmp/consul
+
+  traefik:
+    image: traefik:v1.3
+    environment:
+      - "HOST=$DOCKER_IP"
+    restart: always
+    expose:
+      - 8080
+      - 8081
+    ports:
+      - 8080:8080
+      - 8081:8081
+    extra_hosts:
+      - "consul:${DOCKER_IP}"
+    volumes:
+      - "$PWD/image/traefik/traefik.toml:/etc/traefik/traefik.toml"
+    depends_on:
+      - consul
+
+  registrator:
+    image: gliderlabs/registrator:v7
+    environment:
+      - "HOST=$DOCKER_IP"
+      - "SERVICE_TAGS=traefik.enable=false"
+    restart: always
+    volumes:
+      - "/var/run/docker.sock:/tmp/docker.sock"
+    command: -ip $DOCKER_IP consul://$DOCKER_IP:8500
+    network_mode: host
+    logging:
+      driver: none
+    depends_on:
+      - consul
+
+  portainer:
+    image: portainer/portainer
+    environment:
+      - "HOST=$DOCKER_IP"
+      - "SERVICE_TAGS=traefik.enable=false"
+    restart: always
+    volumes:
+      - '/var/run/docker.sock:/var/run/docker.sock'
+    expose:
+      - 9000
+    ports:
+      - 9000:9000
+    depends_on:
+      - registrator
+
+  password:
+    image: henryse/docker-curl:latest
+    environment:
+        - "CURL_SLEEP=10"
+    command: -X POST -d '${PASSWORD_JSON}' http://${DOCKER_IP}:9000/api/users/admin/init
+    depends_on:
+      - portainer
