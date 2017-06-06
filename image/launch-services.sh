@@ -52,7 +52,6 @@ if [ "${DOCKER_IP}" == "" ]; then
     export DOCKER_IP="127.0.0.1"
 fi
 
-#
 # Setup traefik.toml file with the correct IP Address
 #
 export CONSUL_IP=${DOCKER_IP}
@@ -70,7 +69,6 @@ popd
 
 # Dump Handy IP Addresses
 #
-docker ps
 
 echo -e "${white}Docker host is ${green}${DOCKER_IP}${nocolor} as ${1}"
 echo -e ""
