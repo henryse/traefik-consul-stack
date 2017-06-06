@@ -64,7 +64,6 @@ export PASSWORD_JSON=$(cat password.json);
 
 # Fire it up!
 #
-pushd ../env/$1
 docker-compose up -d --remove-orphans
 popd
 
