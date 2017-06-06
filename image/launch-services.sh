@@ -55,7 +55,7 @@ fi
 # Setup traefik.toml file with the correct IP Address
 #
 export CONSUL_IP=${DOCKER_IP}
-cat $(pwd)/traefik/traefik.toml.sed |  sed -e "s/CONSUL_IP/${CONSUL_IP}/g" > $(pwd)/traefik/traefik.toml
+cat $(pwd)/traefik/traefik.toml.sed |  sed -e "s/CONSUL_IP/${CONSUL_IP}/g" > $(pwd)/../env/$1/traefik.toml
 
 # We need to get the password:
 #

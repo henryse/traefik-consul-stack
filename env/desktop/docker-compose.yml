@@ -62,7 +62,7 @@ services:
     extra_hosts:
       - "consul:${DOCKER_IP}"
     volumes:
-      - "$PWD/image/traefik/traefik.toml:/etc/traefik/traefik.toml"
+      - "$PWD/traefik.toml:/etc/traefik/traefik.toml"
     depends_on:
       - consul
 
