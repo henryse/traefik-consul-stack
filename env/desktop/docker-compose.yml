@@ -52,6 +52,7 @@ services:
     image: traefik:v1.3
     environment:
       - "HOST=$DOCKER_IP"
+      - "SERVICE_TAGS=traefik.enable=false"
     restart: always
     expose:
       - 8080
@@ -103,3 +104,11 @@ services:
     command: -X POST -d '${PASSWORD_JSON}' http://${DOCKER_IP}:9000/api/users/admin/init
     depends_on:
       - portainer
+
+  consul_setup:
+      image: henryse/docker-curl:latest
+      environment:
+          - "CURL_SLEEP=10"
+      command: "-X PUT -d '{\"ID\": \"consul\", \"Name\": \"consul\", \"Tags\": [\"traefik.enable=false\"], \"Address\": \"\", \"Port\": 8300, \"EnableTagOverride\": false, \"CreateIndex\": 0, \"ModifyIndex\": 0}' http://${DOCKER_IP}:8500/v1/agent/service/register"
+      depends_on:
+        - consul
