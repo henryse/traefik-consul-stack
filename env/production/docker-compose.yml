@@ -47,8 +47,8 @@ services:
       - 8500:8500
       - 8600:8600
     volumes:
-      - "$PWD/config:consul/config"
-      - "$PWD/config:consul/data"
+      - "$PWD/config:/consul/config"
+      - "$PWD/config:/consul/data"
     command: agent -server -bootstrap -client 0.0.0.0 -advertise $DOCKER_IP -ui -data-dir=/tmp/consul -config-dir=/consul/config -data-dir=/consul/data
 
   traefik:
