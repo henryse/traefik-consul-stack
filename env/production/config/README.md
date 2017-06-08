@@ -1,1 +1,0 @@
-Config data for consul.
