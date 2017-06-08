@@ -1,0 +1,6 @@
+{
+  "datacenter": "seattle",
+  "log_level": "INFO",
+  "node_name": "tivan",
+  "server": true,
+}
