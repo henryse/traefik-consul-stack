@@ -1,1 +1,0 @@
-{"ID": "consul", "Name": "consul", "Tags": ["traefik.enable=false"], "Address": "", "Port": 8300, "EnableTagOverride": false, "CreateIndex": 0, "ModifyIndex": 0}

@@ -1,7 +1,0 @@
-{
-  "datacenter": "seattle",
-  "log_level": "INFO",
-  "node_name": "tivan",
-  "domain" : "applegate.farm",
-  "server": true
-}

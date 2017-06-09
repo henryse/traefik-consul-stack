@@ -1,4 +1,4 @@
-#**********************************************************************
+# **********************************************************************
 #    Copyright (c) 2017 Henry Seurer
 #
 #    Permission is hereby granted, free of charge, to any person
@@ -22,7 +22,7 @@
 #    FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 #    OTHER DEALINGS IN THE SOFTWARE.
 #
-#**********************************************************************
+# **********************************************************************
 
 version: "2"
 services:
@@ -47,7 +47,7 @@ services:
       - 8500:8500
       - 8600:8600/udp
     volumes:
-      - "$PWD/config/consul:/consul/config"
+      - /var/local/config/consul:/usr/src/app/config
       - "$PWD/data:/consul/data"
     command: agent -server -bootstrap -client 0.0.0.0 -advertise $DOCKER_IP -ui -data-dir=/tmp/consul -config-dir=/consul/config -data-dir=/consul/data
 
@@ -66,7 +66,7 @@ services:
     extra_hosts:
       - "consul:${DOCKER_IP}"
     volumes:
-      - "$PWD/config/traefik/traefik.toml:/etc/traefik/traefik.toml"
+      - "/var/local/config/traefik/traefik.toml:/etc/traefik/traefik.toml"
     depends_on:
       - consul
 
@@ -103,14 +103,18 @@ services:
     image: henryse/docker-curl:latest
     environment:
         - "CURL_SLEEP=10"
-    command: -X POST -d '${PASSWORD_JSON}' http://${DOCKER_IP}:9000/api/users/admin/init
+    command: -X POST -d '@/config/portainer/password.json' http://${DOCKER_IP}:9000/api/users/admin/init
+    volumes:
+      - "/var/local/config:/config"
     depends_on:
       - portainer
 
   consul_setup:
       image: henryse/docker-curl:latest
       environment:
-          - "CURL_SLEEP=10"
-      command: "-X PUT -d '{\"ID\": \"consul\", \"Name\": \"consul\", \"Tags\": [\"traefik.enable=false\"], \"Address\": \"\", \"Port\": 8300, \"EnableTagOverride\": false, \"CreateIndex\": 0, \"ModifyIndex\": 0}' http://${DOCKER_IP}:8500/v1/agent/service/register"
+        - "CURL_SLEEP=10"
+      command: -X PUT -d '@/config/consul/consul_config.json' http://${DOCKER_IP}:8500/v1/agent/service/register
+      volumes:
+        - "/var/local/config:/config"
       depends_on:
         - consul

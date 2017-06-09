@@ -58,10 +58,6 @@ if [ "desktop" == "${1}" ]; then
     cat $(pwd)/../env/$1/config/traefik/traefik.toml.sed |  sed -e "s/CONSUL_IP/${CONSUL_IP}/g" > $(pwd)/../env/$1/config/traefik/traefik.toml
 fi
 
-# We need to get the password:
-#
-export PASSWORD_JSON=$(cat password.json);
-
 # Fire it up!
 #
 pushd ../env/$1
