@@ -50,7 +50,6 @@ services:
       - "$PWD/config:/consul/config"
       - "$PWD/config:/consul/data"
     command: agent -server -bootstrap -client 0.0.0.0 -advertise $DOCKER_IP -ui -data-dir=/tmp/consul -config-dir=/consul/config -data-dir=/consul/data
-    network_mode: host
 
   traefik:
     image: traefik:v1.3
@@ -80,7 +79,6 @@ services:
     volumes:
       - "/var/run/docker.sock:/tmp/docker.sock"
     command: -ip $DOCKER_IP consul://$DOCKER_IP:8500
-    network_mode: host
     logging:
       driver: none
     depends_on:
