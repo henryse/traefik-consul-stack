@@ -45,11 +45,12 @@ services:
       - 8302:8302
       - 8400:8400
       - 8500:8500
-      - 8600:53/udp
+      - 8600:8600/udp
     volumes:
       - "$PWD/config:/consul/config"
       - "$PWD/config:/consul/data"
     command: agent -server -bootstrap -client 0.0.0.0 -advertise $DOCKER_IP -ui -data-dir=/tmp/consul -config-dir=/consul/config -data-dir=/consul/data
+    network_mode: host
 
   traefik:
     image: traefik:v1.3
