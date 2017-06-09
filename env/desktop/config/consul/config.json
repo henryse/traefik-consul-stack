@@ -1,0 +1,7 @@
+{
+  "datacenter": "desktop",
+  "log_level": "INFO",
+  "node_name": "desktop",
+  "domain" : "local.farm",
+  "server": true
+}

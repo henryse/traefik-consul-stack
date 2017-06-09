@@ -47,7 +47,7 @@ services:
       - 8500:8500
       - 8600:8600/udp
     volumes:
-      - "$PWD/config:/consul/config"
+      - "$PWD/config/consul:/consul/config"
       - "$PWD/data:/consul/data"
     command: agent -server -bootstrap -client 0.0.0.0 -advertise $DOCKER_IP -ui -data-dir=/tmp/consul -config-dir=/consul/config -data-dir=/consul/data
 
@@ -66,7 +66,7 @@ services:
     extra_hosts:
       - "consul:${DOCKER_IP}"
     volumes:
-      - "$PWD/traefik.toml:/etc/traefik/traefik.toml"
+      - "$PWD/config/traefik/traefik.toml:/etc/traefik/traefik.toml"
     depends_on:
       - consul
 
