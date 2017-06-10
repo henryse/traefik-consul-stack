@@ -61,7 +61,7 @@ echo -e "${white}Docker host is ${green}${DOCKER_IP}${nocolor}"
 pushd ../env/$1
 docker-compose stop
 docker-compose rm -f
-if [ -f $(pwd)/traefik.toml ]; then
-    rm $(pwd)/traefik.toml
+if [ -f $(pwd)/config/traefik/traefik.toml ]; then
+    rm $(pwd)/config/traefik/traefik.toml
 fi
 popd
