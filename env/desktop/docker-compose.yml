@@ -40,12 +40,12 @@ services:
       - 8500
       - 8600
     ports:
-      - 8300:8300
-      - 8301:8301
-      - 8302:8302
-      - 8400:8400
-      - 8500:8500
-      - 8600:8600/udp
+      - 8300:9300
+      - 8301:9301
+      - 8302:9302
+      - 8400:9400
+      - 8500:9500
+      - 8600:9600/udp
     command: agent -server -bootstrap -client 0.0.0.0 -advertise $DOCKER_IP -ui -data-dir=/tmp/consul -config-dir=/consul/config -data-dir=/consul/data
 
   traefik:
@@ -58,8 +58,8 @@ services:
       - 8080
       - 8081
     ports:
-      - 8080:8080
-      - 8081:8081
+      - 8080:9080
+      - 8081:9081
     extra_hosts:
       - "consul:${DOCKER_IP}"
     volumes:
@@ -75,7 +75,7 @@ services:
     restart: always
     volumes:
       - "/var/run/docker.sock:/tmp/docker.sock"
-    command: -ip $DOCKER_IP consul://$DOCKER_IP:8500
+    command: -ip $DOCKER_IP consul://$DOCKER_IP:9500
     logging:
       driver: none
     depends_on:
@@ -110,7 +110,7 @@ services:
       image: henryse/docker-curl:latest
       environment:
           - "CURL_SLEEP=10"
-      command: -X PUT -d '@/config/consul/consul_config.json' http://${DOCKER_IP}:8500/v1/agent/service/register
+      command: -X PUT -d '@/config/consul/consul_config.json' http://${DOCKER_IP}:9500/v1/agent/service/register
       volumes:
         - "$PWD/config:/config"
       depends_on:
