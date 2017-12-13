@@ -55,7 +55,7 @@ fi
 #
 if [ "desktop" == "${1}" ]; then
     export CONSUL_IP=${DOCKER_IP}
-    cat $(pwd)/../env/$1/config/traefik/traefik.toml.sed |  sed -e "s/CONSUL_IP/${CONSUL_IP}/g" > $(pwd)/../env/$1/config/traefik/traefik.toml
+    cat $(pwd | sed 's/ /\\ /g')/../env/$1/config/traefik/traefik.toml.sed |  sed -e "s/CONSUL_IP/${CONSUL_IP}/g" > $(pwd | sed 's/ /\\ /g')/../env/$1/config/traefik/traefik.toml
 fi
 
 # Fire it up!

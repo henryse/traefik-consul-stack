@@ -1,3 +1,5 @@
+cur_dir:=$(shell echo $(CURDIR) | sed 's/ /\\ /g')
+
 ifdef VERSION
 	project_version:=$(VERSION)
 else
@@ -7,19 +9,19 @@ endif
 ifdef PROJECT_NAME
 	project_name:=$(PROJECT_NAME)
 else
-	project_name:=$(shell basename $(CURDIR))
+	project_name:=$(shell basename $(cur_dir))
 endif
 
 ifdef SRC_DIR
 	source_directory:=$(SRC_DIR)
 else
-	source_directory:=$(CURDIR)/image
+	source_directory:=$(cur_dir)/image
 endif
 
 repository:=gcr.io/applegate-road-2829/$(project_name)
 latest_image:=$(repository):latest
 version_image:=$(repository):$(project_version)
-docker_machine_ip:=$(shell bash $(CURDIR)/image/docker-ip.sh)
+docker_machine_ip:=$(shell bash $(cur_dir)/image/docker-ip.sh)
 
 version:
 	@echo [INFO] [version]
@@ -62,15 +64,15 @@ help: settings
 
 
 clean: settings
-	export DOCKER_IP=$(docker_machine_ip);cd $(CURDIR)/env/production;docker-compose rm
-	export DOCKER_IP=$(docker_machine_ip);cd $(CURDIR)/env/desktop;docker-compose rm
+	export DOCKER_IP=$(docker_machine_ip);cd $(cur_dir)/env/production;docker-compose rm
+	export DOCKER_IP=$(docker_machine_ip);cd $(cur_dir)/env/desktop;docker-compose rm
 
 production: settings
-	export DOCKER_IP=$(docker_machine_ip);cd $(CURDIR)/image;./launch-services.sh production
+	export DOCKER_IP=$(docker_machine_ip);cd $(cur_dir)/image;./launch-services.sh production
 
 desktop: settings
-	export DOCKER_IP=$(docker_machine_ip);cd $(CURDIR)/image;./launch-services.sh desktop
+	export DOCKER_IP=$(docker_machine_ip);cd $(cur_dir)/image;./launch-services.sh desktop
 
 stop: settings
-	export DOCKER_IP=$(docker_machine_ip);cd $(CURDIR)/image;./stop-services.sh desktop
-	export DOCKER_IP=$(docker_machine_ip);cd $(CURDIR)/image;./stop-services.sh production
+	export DOCKER_IP=$(docker_machine_ip);cd $(cur_dir)/image;./stop-services.sh desktop
+	export DOCKER_IP=$(docker_machine_ip);cd $(cur_dir)/image;./stop-services.sh production
