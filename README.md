@@ -1,3 +1,5 @@
+**Status:** Demo/Prototype
+
 # Traefik Consul Stack
 
 This is a simple stack that can be used in a micro service stack.
